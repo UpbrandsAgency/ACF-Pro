@@ -1,0 +1,16 @@
+{
+  "name": "GooUlla/acf-pro-512",
+  "description": "",
+  "keywords": ["wordpress", "plugin"],
+  "homepage": "https://github.com/GooUlla/acf-pro-512",
+  "authors": [
+    {
+      "name": "Nan",
+      "homepage": "https://google.com"
+    }
+  ],
+  "type": "wordpress-plugin",
+  "require": {
+    "php": ">=7"
+  }
+}
