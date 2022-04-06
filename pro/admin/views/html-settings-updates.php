@@ -103,7 +103,9 @@ $readonly = $active ? 1 : 0;
 								
 								<span style="margin-right: 5px;"><?php _e( 'Yes', 'acf' ); ?></span>
 								
-								<?php if ( $active ) : ?>
+								<?php if ( $license_error ) : ?>
+									<a class="button" disabled="disabled" href="#"><?php _e( 'Please reactivate your license to unlock updates', 'acf' ); ?></a>
+								<?php elseif ( $active ) : ?>
 									<a class="button button-primary" href="<?php echo esc_attr( admin_url( 'plugins.php?s=Advanced+Custom+Fields+Pro' ) ); ?>"><?php _e( 'Update Plugin', 'acf' ); ?></a>
 								<?php else : ?>
 									<a class="button" disabled="disabled" href="#"><?php _e( 'Please enter your license key above to unlock updates', 'acf' ); ?></a>
