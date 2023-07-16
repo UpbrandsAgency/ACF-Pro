@@ -137,6 +137,9 @@ if ( ! class_exists( 'ACF_Admin_Updates' ) ) :
 		 * @return  void
 		 */
 		function load() {
+
+			add_action( 'admin_body_class', array( $this, 'admin_body_class' ) );
+
 			// Check activate.
 			if ( acf_verify_nonce( 'activate_pro_license' ) ) {
 				acf_pro_activate_license( sanitize_text_field( $_POST['acf_pro_license'] ) );
@@ -149,8 +152,8 @@ if ( ! class_exists( 'ACF_Admin_Updates' ) ) :
 			// vars
 			$license    = acf_pro_get_license_key();
 			$this->view = array(
-				'license'            => 'stefBabiato',
-				'active'             => 1,
+				'license'            => $license,
+				'active'             => $license ? 1 : 0,
 				'current_version'    => acf_get_setting( 'version' ),
 				'remote_version'     => '',
 				'update_available'   => false,
@@ -187,6 +190,32 @@ if ( ! class_exists( 'ACF_Admin_Updates' ) ) :
 				$basename = acf_get_setting( 'basename' );
 				$update   = acf_updates()->get_plugin_update( $basename );
 				if ( $license ) {
+
+					if ( isset( $update['license_valid'] ) && ! $update['license_valid'] ) {
+
+						$this->view['license_error'] = true;
+						acf_new_admin_notice(
+							array(
+								'text' => __( '<b>Error</b>. Your license for this site has expired or been deactivated. Please reactivate your ACF PRO license.', 'acf' ),
+								'type' => 'error',
+							)
+						);
+
+					} else {
+
+						// display error if no package url
+						// - possible if license key has been modified
+						if ( $update && ! $update['package'] ) {
+							$this->view['license_error'] = true;
+							acf_new_admin_notice(
+								array(
+									'text' => __( '<b>Error</b>. Could not authenticate update package. Please check again or deactivate and reactivate your ACF PRO license.', 'acf' ),
+									'type' => 'error',
+								)
+							);
+						}
+					}
+
 					// refresh transient
 					// - if no update exists in the transient
 					// - or if the transient 'new_version' is stale
@@ -197,7 +226,18 @@ if ( ! class_exists( 'ACF_Admin_Updates' ) ) :
 			}
 		}
 
-
+		/**
+		 * Modifies the admin body class.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param string $classes Space-separated list of CSS classes.
+		 * @return string
+		 */
+		public function admin_body_class( $classes ) {
+			$classes .= ' acf-admin-page';
+			return $classes;
+		}
 
 		/**
 		 * html

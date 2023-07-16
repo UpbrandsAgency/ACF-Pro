@@ -104,6 +104,29 @@ $readonly = $active ? 1 : 0;
 					<?php endif; ?>
 				</tbody>
 			</table>
+
+			<?php if ( $changelog ) : ?>
+			<div class="acf-update-changelog">
+				<?php echo acf_esc_html( $changelog ); ?>
+			</div>
+			<?php endif; ?>
+
+			<?php if ( $update_available ) : ?>
+
+				<?php if ( $license_error ) : ?>
+					<a class="button" disabled="disabled" href="#"><?php _e( 'Please reactivate your license to unlock updates', 'acf' ); ?></a>
+				<?php elseif ( $active ) : ?>
+					<a class="acf-btn" href="<?php echo esc_attr( admin_url( 'plugins.php?s=Advanced+Custom+Fields+Pro' ) ); ?>"><?php _e( 'Update Plugin', 'acf' ); ?></a>
+				<?php else : ?>
+					<a class="button" disabled="disabled" href="#"><?php _e( 'Enter your license key to unlock updates', 'acf' ); ?></a>
+				<?php endif; ?>
+
+			<?php else : ?>
+
+				<a class="acf-btn acf-btn-secondary" href="<?php echo esc_attr( add_query_arg( 'force-check', 1 ) ); ?>"><?php _e( 'Check For Updates', 'acf' ); ?></a>
+
+			<?php endif; ?>
+
 		</div>
 	</div>
 </div>
