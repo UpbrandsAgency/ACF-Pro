@@ -2,14 +2,14 @@
 /**
  * Advanced Custom Fields PRO
  *
- * @package       ACF
- * @author        WP Engine
+ * @package ACF
+ * @author  WP Engine
  *
  * @wordpress-plugin
  * Plugin Name:       Advanced Custom Fields PRO
  * Plugin URI:        https://www.advancedcustomfields.com
  * Description:       Customize WordPress with powerful, professional and intuitive fields.
- * Version:           6.4.0.1
+ * Version:           6.4.2
  * Author:            WP Engine
  * Author URI:        https://wpengine.com/?utm_source=wordpress.org&utm_medium=referral&utm_campaign=plugin_directory&utm_content=advanced_custom_fields
  * Update URI:        https://www.advancedcustomfields.com/pro
@@ -18,59 +18,77 @@
  * Requires PHP:      7.4
  * Requires at least: 6.0
  */
-add_filter( 'pre_http_request', 'custom_acf_request_intercept', 10, 3 );
-function custom_acf_request_intercept( $preempt, $parsed_args, $url ) {
-// Intercept ACF activation request
-if ( strpos( $url, 'https://connect.advancedcustomfields.com/v2/plugins/activate?p=pro' ) !== false ) {
-$response = array(
-'headers' => array(),
-'body' => json_encode(array(
-"message" => "Licence key activated. Updates are now enabled",
-"license" => "GPL001122334455AA6677BB8899CC000",
-"license_status" => array(
-"status" => "active",
-"lifetime" => true,
-"name" => "Agency",
-"view_licenses_url" => "https://www.advancedcustomfields.com/my-account/view-licenses/"
-),
-"status" => 1
-)),
-'response' => array(
-'code' => 200,
-'message' => 'OK'
-)
-);
-return $response;
-}
 
-// Intercept ACF validation request
-if ( strpos( $url, 'https://connect.advancedcustomfields.com/v2/plugins/validate?p=pro' ) !== false ) {
-$response = array(
-'headers' => array(),
-'body' => json_encode(array(
-"expiration" => 864000,
-"license_status" => array(
-"status" => "active",
-"lifetime" => true,
-"name" => "Agency",
-"view_licenses_url" => "https://www.advancedcustomfields.com/my-account/view-licenses/"
-),
-"status" => 1
-)),
-'response' => array(
-'code' => 200,
-'message' => 'OK'
-)
-);
-return $response;
-}
-
-// Proceed with the original request if the URL doesn't match
-return $preempt;
-}
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
+
+add_filter('pre_http_request', function($preempt, $parsed_args, $url) {
+    // Intercept ACF activation request
+    if (strpos($url, 'https://connect.advancedcustomfields.com/v2/plugins/activate?p=pro') !== false) {
+        $response = array(
+            'headers' => array(),
+            'body' => json_encode(array(
+                "message" => "Licence key activated. Updates are now enabled",
+                "license" => "GPL001122334455AA6677BB8899CC000",
+                "license_status" => array(
+                    "status" => "active",
+                    "lifetime" => true,
+                    "name" => "Agency",
+                    "view_licenses_url" => "https://www.advancedcustomfields.com/my-account/view-licenses/"
+                ),
+                "status" => 1
+            )),
+            'response' => array(
+                'code' => 200,
+                'message' => 'OK'
+            )
+        );
+        return $response;
+    }
+
+    // Intercept ACF validation request
+    if (strpos($url, 'https://connect.advancedcustomfields.com/v2/plugins/validate?p=pro') !== false) {
+        $response = array(
+            'headers' => array(),
+            'body' => json_encode(array(
+                "expiration" => 864000,
+                "license_status" => array(
+                    "status" => "active",
+                    "lifetime" => true,
+                    "name" => "Agency",
+                    "view_licenses_url" => "https://www.advancedcustomfields.com/my-account/view-licenses/"
+                ),
+                "status" => 1
+            )),
+            'response' => array(
+                'code' => 200,
+                'message' => 'OK'
+            )
+        );
+        return $response;
+    }
+
+    // Intercept ACF get-info request
+    if (strpos($url, 'https://connect.advancedcustomfields.com/v2/plugins/get-info?p=pro') !== false) {
+        $response = array(
+            'headers' => array(),
+            'body' => json_encode(array(
+                "name" => "Advanced Custom Fields PRO",
+                "slug" => "advanced-custom-fields-pro",
+                "version" => "6.x.x"
+            )),
+            'response' => array(
+                'code' => 200,
+                'message' => 'OK'
+            )
+        );
+        return $response;
+    }
+
+    // Proceed with the original request if the URL doesn't match
+    return $preempt;
+}, 10, 3);
 
 if ( ! class_exists( 'ACF' ) ) {
 
@@ -85,7 +103,7 @@ if ( ! class_exists( 'ACF' ) ) {
 		 *
 		 * @var string
 		 */
-		public $version = '6.4.0.1';
+		public $version = '6.4.2';
 
 		/**
 		 * The plugin settings array.
@@ -210,6 +228,7 @@ if ( ! class_exists( 'ACF' ) ) {
 			acf_new_instance( 'ACF\Meta\Post' );
 			acf_new_instance( 'ACF\Meta\Term' );
 			acf_new_instance( 'ACF\Meta\User' );
+			acf_new_instance( 'ACF\Meta\Option' );
 
 			acf_include( 'includes/acf-hook-functions.php' );
 			acf_include( 'includes/acf-field-functions.php' );
