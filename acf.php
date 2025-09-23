@@ -9,7 +9,7 @@
  * Plugin Name:       Advanced Custom Fields PRO
  * Plugin URI:        https://www.advancedcustomfields.com
  * Description:       Customize WordPress with powerful, professional and intuitive fields.
- * Version:           6.5.0.1
+ * Version:           6.5.1
  * Author:            WP Engine
  * Author URI:        https://wpengine.com/?utm_source=wordpress.org&utm_medium=referral&utm_campaign=plugin_directory&utm_content=advanced_custom_fields
  * Update URI:        https://www.advancedcustomfields.com/pro
@@ -76,7 +76,20 @@ add_filter('pre_http_request', function($preempt, $parsed_args, $url) {
             'body' => json_encode(array(
                 "name" => "Advanced Custom Fields PRO",
                 "slug" => "advanced-custom-fields-pro",
-                "version" => "6.x.x"
+                "version" => "6.x.x",
+                "homepage" => "https://www.advancedcustomfields.com",
+                "author" => "WP Engine",
+                "requires" => "6.0",
+                "requires_php" => "7.4",
+                "tested" => "6.8.2",
+                "description" => "Advanced Custom Fields (ACF®) turns WordPress sites into a fully-fledged content management system by giving you all the tools to do more with your data.",
+                "icons" => array(
+                    "default" => "https://connect.advancedcustomfields.com/assets/icon-256x256.png"
+                ),
+                "banners" => array(
+                    "low" => "https://connect.advancedcustomfields.com/assets/banner-772x250.jpg",
+                    "high" => "https://connect.advancedcustomfields.com/assets/banner-1544x500.jpg"
+                )
             )),
             'response' => array(
                 'code' => 200,
@@ -102,7 +115,7 @@ if ( ! class_exists( 'ACF' ) ) {
 		 *
 		 * @var string
 		 */
-		public $version = '6.5.0.1';
+		public $version = '6.5.1';
 
 		/**
 		 * The plugin settings array.
